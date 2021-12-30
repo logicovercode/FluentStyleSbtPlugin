@@ -35,12 +35,12 @@ val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.522")
     "com.logicovercode" %% "docker-definitions" % "0.0.003"
   )
   .sbtPlugins(
-    "com.logicovercode" %% "fluent-style-sbt-core" % "0.0.420",
+    "com.logicovercode" %% "fluent-style-sbt-core" % "0.0.421",
     /*this will automatically fetch flyway-sbt, sbt-pack for sbt projects that depends on fluent-style-sbt*/
     "io.github.davidmweber" % "flyway-sbt" % "6.5.0",
     "org.xerial.sbt" % "sbt-pack" % "0.13",
-//    "org.scalameta" % "sbt-scalafmt" % "2.4.0",
-//    "com.github.cb372" % "sbt-explicit-dependencies" % "0.2.16"
+    "org.scalameta" % "sbt-scalafmt" % "2.4.6",
+    "com.github.cb372" % "sbt-explicit-dependencies" % "0.2.16"
   )
   .sbtPlugins("com.thesamet" % "sbt-protoc" % "1.0.0")
   .dependencies("com.thesamet.scalapb" %% "compilerplugin" % "0.9.0")
