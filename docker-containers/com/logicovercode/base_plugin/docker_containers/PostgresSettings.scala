@@ -1,12 +1,13 @@
 package com.logicovercode.base_plugin.docker_containers
 
-import com.logicovercode.bsbt.docker.model.{DockerInfra, ServiceDescription}
+import com.logicovercode.bsbt.docker.service.SbtServiceDescription
+import com.logicovercode.wdocker.api.DockerContext
 import com.logicovercode.wdocker.{ContainerDefinition, DockerNetwork, DockerReadyChecker}
 import sbt.Def
 
 import scala.concurrent.duration.DurationInt
 
-trait PostgresSettings extends DockerInfra  {
+trait PostgresSettings  {
 
   object PostgresService extends IFlyway {
 
@@ -16,9 +17,9 @@ trait PostgresSettings extends DockerInfra  {
         userName: String,
         dbPassword: String,
         dbInitDirectory: String
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
 
-      postgresServiceDescription(containerName, databaseName, userName, dbPassword, 5432, DockerNetwork("bridge"), Option(dbInitDirectory), 5, 5)
+      postgresSbtServiceDescription(containerName, databaseName, userName, dbPassword, 5432, DockerNetwork("bridge"), Option(dbInitDirectory), 5, 5)
     }
 
     def apply(
@@ -28,24 +29,24 @@ trait PostgresSettings extends DockerInfra  {
         dbPassword: String,
         hostPort: Int,
         dbInitDirectory: String
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
 
-      postgresServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, DockerNetwork("bridge"), Option(dbInitDirectory), 5, 5)
+      postgresSbtServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, DockerNetwork("bridge"), Option(dbInitDirectory), 5, 5)
     }
 
-    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String): ServiceDescription = {
+    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String): SbtServiceDescription = {
 
-      postgresServiceDescription(containerName, databaseName, userName, dbPassword, 5432, DockerNetwork("bridge"), None, 5, 5)
+      postgresSbtServiceDescription(containerName, databaseName, userName, dbPassword, 5432, DockerNetwork("bridge"), None, 5, 5)
     }
 
-    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String, hostPort: Int): ServiceDescription = {
+    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String, hostPort: Int): SbtServiceDescription = {
 
-      postgresServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, DockerNetwork("bridge"), None, 5, 5)
+      postgresSbtServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, DockerNetwork("bridge"), None, 5, 5)
     }
 
-    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String, hostPort: Int, network : DockerNetwork): ServiceDescription = {
+    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String, hostPort: Int, network : DockerNetwork): SbtServiceDescription = {
 
-      postgresServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, network, None, 5, 5)
+      postgresSbtServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, network, None, 5, 5)
     }
 
     def apply(
@@ -58,9 +59,9 @@ trait PostgresSettings extends DockerInfra  {
         dbIntDir: Option[String],
         imagePullTimeoutInMinutes: Int,
         containerStartTimeoutInMinutes: Int
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
 
-      postgresServiceDescription(
+      postgresSbtServiceDescription(
         containerName,
         databaseName,
         userName,
@@ -73,7 +74,7 @@ trait PostgresSettings extends DockerInfra  {
       )
     }
 
-    private def postgresServiceDescription(
+    private def postgresSbtServiceDescription(
         containerName: String,
         databaseName: String,
         dbUserName: String,
@@ -83,11 +84,11 @@ trait PostgresSettings extends DockerInfra  {
         dbInitDirectory: Option[String],
         imagePullTimeoutInMinutes: Int,
         containerStartTimeoutInMinutes: Int
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
       val imageName: String = "postgres:latest"
       val dbContainerPort = 5432
 
-      val dbContainer = ContainerDefinition(imageName, Option(containerName))
+      val dbContainer = ContainerDefinition(None, "postgres", "latest", Option(containerName))
         .withEnv(
           s"POSTGRES_DB=$databaseName",
           s"POSTGRES_USER=$dbUserName",
@@ -116,7 +117,7 @@ trait PostgresSettings extends DockerInfra  {
         case None => Set()
       }
 
-      ServiceDescription(dbContainer, flywaySettings.toSet, imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      SbtServiceDescription(dbContainer, flywaySettings.toSet, imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
     }
   }
 
