@@ -1,19 +1,19 @@
 package hive
 
-import com.logicovercode.bsbt.docker.DockerSystem
-import com.logicovercode.bsbt.docker.model.DockerInfra
+import com.logicovercode.base_plugin.docker_containers.SshClusterSettings
+import com.logicovercode.bsbt.docker.model.DockerContext
 import com.logicovercode.bsbt.docker.utils.DockerServiceOperations
 import com.logicovercode.wdocker.DockerNetwork
 
 import scala.util.{Failure, Success, Try}
 
-object StartService extends SshClusterSettings with DockerInfra{
+object StartService extends SshClusterSettings with DockerContext{
 
   val cluster = {
 
     val hnet = DockerNetwork("hnet", Option("192.168.33.0/16"))
 
-    ClusterBuilder(hnet).addMaster().buildHiveCluster()
+    ServiceBuilder(hnet).addMaster().buildHiveCluster()
 
   }
 
@@ -29,7 +29,7 @@ object StartService extends SshClusterSettings with DockerInfra{
       network = containerDefinition.container.networkMode
     } yield network).flatten
 
-    implicit val dockerClient = DockerInfra.dockerClient
+    implicit val dockerClient = DockerContext.dockerClient
 
     val status = for{
       nets <- Try(allNetworks)

@@ -1,13 +1,14 @@
 package com.logicovercode.base_plugin.docker_containers
 
+import com.logicovercode.bsbt.docker.service.SbtServiceDescription
 import com.logicovercode.docker.db.MySqlDbDefinition
-import com.logicovercode.bsbt.docker.model.{DockerInfra, ServiceDescription}
 import com.logicovercode.wdocker.DockerNetwork
+import com.logicovercode.wdocker.api.DockerContext
 import sbt.Def
 
 import scala.concurrent.duration.DurationInt
 
-trait MySqlSettings extends DockerInfra  {
+trait MySqlSettings  {
 
   object MySqlService extends IFlyway {
 
@@ -17,9 +18,9 @@ trait MySqlSettings extends DockerInfra  {
         userName: String,
         dbPassword: String,
         dbInitDirectory: String
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
 
-      mysqlServiceDescription(containerName, databaseName, userName, dbPassword, 3306, DockerNetwork("bridge"), Option(dbInitDirectory), 5, 5)
+      mysqlSbtServiceDescription(containerName, databaseName, userName, dbPassword, 3306, DockerNetwork("bridge"), Option(dbInitDirectory), 5, 5)
     }
 
     def apply(
@@ -29,19 +30,19 @@ trait MySqlSettings extends DockerInfra  {
         dbPassword: String,
         hostPort: Int,
         dbInitDirectory: String
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
 
-      mysqlServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, DockerNetwork("bridge"), Option(dbInitDirectory), 5, 5)
+      mysqlSbtServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, DockerNetwork("bridge"), Option(dbInitDirectory), 5, 5)
     }
 
-    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String): ServiceDescription = {
+    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String): SbtServiceDescription = {
 
-      mysqlServiceDescription(containerName, databaseName, userName, dbPassword, 3306, DockerNetwork("bridge"), None, 5, 5)
+      mysqlSbtServiceDescription(containerName, databaseName, userName, dbPassword, 3306, DockerNetwork("bridge"), None, 5, 5)
     }
 
-    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String, hostPort: Int): ServiceDescription = {
+    def apply(containerName: String, databaseName: String, userName: String, dbPassword: String, hostPort: Int): SbtServiceDescription = {
 
-      mysqlServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, DockerNetwork("bridge"), None, 5, 5)
+      mysqlSbtServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, DockerNetwork("bridge"), None, 5, 5)
     }
 
     def apply(
@@ -51,9 +52,9 @@ trait MySqlSettings extends DockerInfra  {
         dbPassword: String,
         hostPort: Int,
         network: DockerNetwork
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
 
-      mysqlServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, network, None, 5, 5)
+      mysqlSbtServiceDescription(containerName, databaseName, userName, dbPassword, hostPort, network, None, 5, 5)
     }
 
     def apply(
@@ -66,9 +67,9 @@ trait MySqlSettings extends DockerInfra  {
         dbIntDir: Option[String],
         imagePullTimeoutInMinutes: Int,
         containerStartTimeoutInMinutes: Int
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
 
-      mysqlServiceDescription(
+      mysqlSbtServiceDescription(
         containerName,
         databaseName,
         userName,
@@ -81,7 +82,7 @@ trait MySqlSettings extends DockerInfra  {
       )
     }
 
-    private def mysqlServiceDescription(
+    private def mysqlSbtServiceDescription(
         containerName: String,
         databaseName: String,
         dbUserName: String,
@@ -91,7 +92,7 @@ trait MySqlSettings extends DockerInfra  {
         dbInitDirectory: Option[String],
         imagePullTimeoutInMinutes: Int,
         containerStartTimeoutInMinutes: Int
-    ): ServiceDescription = {
+    ): SbtServiceDescription = {
 
       val rootUserPassword = "RootPass@123"
 
@@ -117,7 +118,7 @@ trait MySqlSettings extends DockerInfra  {
         case None => Set()
       }
 
-      ServiceDescription(mysqlContainer, flywaySettings.toSet, imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      SbtServiceDescription(mysqlContainer, flywaySettings.toSet, imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
     }
   }
 

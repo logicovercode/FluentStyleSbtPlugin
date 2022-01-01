@@ -1,6 +1,7 @@
 package com.logicovercode.base_plugin.docker_containers
 
 import com.github.dockerjava.api.model.Capability
+import com.logicovercode.bsbt.docker.service.{MicroService, SbtServiceDescription}
 import com.logicovercode.docker.cluster._
 import com.logicovercode.docker.db.MySqlDbDefinition
 import com.logicovercode.docker.hdfs.ClusterNodeHdfsExtension
@@ -8,20 +9,19 @@ import com.logicovercode.docker.hive.ClusterNodeHiveExtension
 import com.logicovercode.docker.kafka.ClusterNodeKafkaExtension
 import com.logicovercode.docker.spark.ClusterNodeSparkExtension
 import com.logicovercode.docker.ssh.{ClusterNodeRootSshExtension, ClusterNodeSshExtension}
-import com.logicovercode.bsbt.docker.model.{DockerInfra, MicroService, ServiceDescription}
 import com.logicovercode.wdocker.HostConfig
 
 import scala.concurrent.duration.DurationInt
 
-trait SshClusterSettings extends DockerInfra with ClusterBuilderDefinitions{
+trait SshClusterSettings extends ClusterBuilderDefinitions{
 
   object CreateRootSshClusterService extends ClusterNodeRootSshExtension{
     def rootSshClusterService(cluster: Cluster, imagePullTimeoutInMinutes: Int, containerStartTimeoutInMinutes: Int) : MicroService = {
 
-      val masterNodeDescription = ServiceDescription(cluster.masterNode.sshNodeDefinition, Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      val masterNodeDescription = SbtServiceDescription(cluster.masterNode.sshNodeDefinition( Option("root") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
 
       val slaveDescriptionSet = cluster.workerNodes.map { slaveNode =>
-        ServiceDescription(slaveNode.sshNodeDefinition, Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+        SbtServiceDescription(slaveNode.sshNodeDefinition( Option("root") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
       }
 
       MicroService( Seq(masterNodeDescription) ++ slaveDescriptionSet )
@@ -31,10 +31,10 @@ trait SshClusterSettings extends DockerInfra with ClusterBuilderDefinitions{
   object CreateSshClusterService extends ClusterNodeSshExtension{
     def sshClusterService(cluster: Cluster, imagePullTimeoutInMinutes: Int, containerStartTimeoutInMinutes: Int) : MicroService = {
 
-      val masterNodeDescription = ServiceDescription(cluster.masterNode.sshNodeDefinition, Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      val masterNodeDescription = SbtServiceDescription(cluster.masterNode.sshNodeDefinition( Option("hduser") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
 
       val slaveDescriptionSet = cluster.workerNodes.map { slaveNode =>
-        ServiceDescription(slaveNode.sshNodeDefinition, Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+        SbtServiceDescription(slaveNode.sshNodeDefinition( Option("hduser") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
       }
 
       MicroService( Seq(masterNodeDescription) ++ slaveDescriptionSet )
@@ -44,10 +44,10 @@ trait SshClusterSettings extends DockerInfra with ClusterBuilderDefinitions{
   object CreateKafkaClusterService extends ClusterNodeKafkaExtension{
     def kafkaClusterService(cluster: Cluster, imagePullTimeoutInMinutes: Int, containerStartTimeoutInMinutes: Int) : MicroService = {
 
-      val masterNodeDescription = ServiceDescription(cluster.masterNode.kafkaNodeDefinition(), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      val masterNodeDescription = SbtServiceDescription(cluster.masterNode.kafkaNodeDefinition( Option("kuser") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
 
       val slaveDescriptionSet = cluster.workerNodes.map { slaveNode =>
-        ServiceDescription(slaveNode.kafkaNodeDefinition(), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+        SbtServiceDescription(slaveNode.kafkaNodeDefinition( Option("hduser") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
       }
 
       MicroService( Seq(masterNodeDescription) ++ slaveDescriptionSet )
@@ -58,11 +58,11 @@ trait SshClusterSettings extends DockerInfra with ClusterBuilderDefinitions{
     def hdfsClusterService(cluster: Cluster, imagePullTimeoutInMinutes: Int, containerStartTimeoutInMinutes: Int) : MicroService = {
 
       var dataNodeHttpPort = 6661
-      val masterNodeDescription = ServiceDescription(cluster.masterNode.hdfsMasterNodeDefinition( Option(dataNodeHttpPort) ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      val masterNodeDescription = SbtServiceDescription(cluster.masterNode.hdfsMasterNodeDefinition( Option(dataNodeHttpPort), Option("hduser") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
 
       val slaveDescriptionSet = cluster.workerNodes.map { slaveNode =>
         dataNodeHttpPort = dataNodeHttpPort + 1
-        ServiceDescription(slaveNode.hdfsSlaveNodeDefinition( Option(dataNodeHttpPort) ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+        SbtServiceDescription(slaveNode.hdfsSlaveNodeDefinition( Option(dataNodeHttpPort), Option("hduser") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
       }
 
       MicroService( Seq(masterNodeDescription) ++ slaveDescriptionSet )
@@ -83,15 +83,15 @@ trait SshClusterSettings extends DockerInfra with ClusterBuilderDefinitions{
       ).withIp(mysqlIp).withHostConfig(sysNiceHostConfig)
 
       var dataNodeHttpPort = 6661
-      val masterNodeDescription = ServiceDescription(cluster.masterNode.sparkMasterNodeDefinition(Option(dataNodeHttpPort)), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      val masterNodeDescription = SbtServiceDescription(cluster.masterNode.sparkMasterNodeDefinition(Option(dataNodeHttpPort), Option("hduser")), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
 
       val slaveDescriptionSet = cluster.workerNodes.map { slaveNode =>
         dataNodeHttpPort = dataNodeHttpPort + 1
-        ServiceDescription(slaveNode.sparkWorkerNodeDefinition(Option(dataNodeHttpPort)), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+        SbtServiceDescription(slaveNode.sparkWorkerNodeDefinition(Option(dataNodeHttpPort), Option("hduser")), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
       }
 
-      val mysqlServiceDescription = ServiceDescription(mysqlContainer, Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
-      MicroService( Seq(masterNodeDescription) ++ Seq(mysqlServiceDescription) ++ slaveDescriptionSet )
+      val mysqlSbtServiceDescription = SbtServiceDescription(mysqlContainer, Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      MicroService( Seq(masterNodeDescription) ++ Seq(mysqlSbtServiceDescription) ++ slaveDescriptionSet )
     }
   }
 
@@ -109,16 +109,16 @@ trait SshClusterSettings extends DockerInfra with ClusterBuilderDefinitions{
       ).withIp(mysqlIp).withHostConfig(sysNiceHostConfig)
 
       var dataNodeHttpPort = 6661
-      val masterNodeDescription = ServiceDescription(cluster.masterNode.hdfsMasterNodeDefinition( Option(dataNodeHttpPort) ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      val masterNodeDescription = SbtServiceDescription(cluster.masterNode.hdfsMasterNodeDefinition( Option(dataNodeHttpPort), Option("hduser") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
 
 
       val slaveDescriptionSet = cluster.workerNodes.map { slaveNode =>
         dataNodeHttpPort = dataNodeHttpPort + 1
-        ServiceDescription(slaveNode.hdfsSlaveNodeDefinition( Option(dataNodeHttpPort) ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+        SbtServiceDescription(slaveNode.hdfsSlaveNodeDefinition( Option(dataNodeHttpPort), Option("hduser") ), Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
       }
 
-      val mysqlServiceDescription = ServiceDescription(mysqlContainer, Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
-      MicroService( Seq(masterNodeDescription) ++ Seq(mysqlServiceDescription) ++ slaveDescriptionSet)
+      val mysqlSbtServiceDescription = SbtServiceDescription(mysqlContainer, Set(), imagePullTimeoutInMinutes.minutes, containerStartTimeoutInMinutes.minutes)
+      MicroService( Seq(masterNodeDescription) ++ Seq(mysqlSbtServiceDescription) ++ slaveDescriptionSet)
     }
   }
 

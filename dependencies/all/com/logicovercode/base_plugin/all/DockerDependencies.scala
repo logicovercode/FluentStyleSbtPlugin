@@ -2,6 +2,7 @@ package com.logicovercode.base_plugin.all
 
 import com.logicovercode.base_plugin.Version
 import sbt._
+import sbt.librarymanagement.ModuleID
 
 trait DockerDependencies {
 
@@ -14,4 +15,14 @@ trait DockerDependencies {
   def test_containers(version: Version = jdbcTestContainers_1_15_2): ModuleID = test_containers(version.version)
   @Deprecated
   def test_containers(version: String): ModuleID = "org.testcontainers" % "testcontainers" % version
+
+  val dockerCore_0_0_003 = Version("0.0.003")
+  def docker_core(version: Version = dockerCore_0_0_003): ModuleID = docker_core(version.version)
+  @Deprecated
+  def docker_core(version: String): ModuleID = "com.logicovercode" %% "docker-core" % version
+
+  val dockerDefinitions_0_0_003 = Version("0.0.003")
+  def docker_definitions(version: Version = dockerDefinitions_0_0_003): ModuleID = docker_definitions(version.version)
+  @Deprecated
+  def docker_definitions(version: String): ModuleID = "com.logicovercode" %% "docker-definitions" % version
 }
