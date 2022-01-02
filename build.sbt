@@ -16,7 +16,7 @@ val techLead = Developer(
 )
 val githubRepo = GithubRepo("logicovercode", "FluentStyleSbtPlugin")
 
-val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.522")
+val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.523")
   .sourceDirectories(
     "dependencies/model",
     "dependencies/spark",
@@ -32,10 +32,10 @@ val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.522")
   //TODO : this dependency is for docker (make this dependency conditional, depending on jdk version)
   .dependencies(
     "javax.activation" % "activation" % "1.1.1",
-    "com.logicovercode" %% "docker-definitions" % "0.0.003"
+    "com.logicovercode" %% "docker-definitions" % "0.0.004"
   )
   .sbtPlugins(
-    "com.logicovercode" %% "fluent-style-sbt-core" % "0.0.421",
+    "com.logicovercode" %% "fluent-style-sbt-core" % "0.0.422",
     /*this will automatically fetch flyway-sbt, sbt-pack for sbt projects that depends on fluent-style-sbt*/
     "io.github.davidmweber" % "flyway-sbt" % "6.5.0",
     "org.xerial.sbt" % "sbt-pack" % "0.13",
