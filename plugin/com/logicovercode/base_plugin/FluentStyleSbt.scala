@@ -1,21 +1,21 @@
 package com.logicovercode.base_plugin
 
-import com.logicovercode.base_plugin.licenses.Licenses
-import com.logicovercode.base_plugin.resolvers.SbtResolvers
 import com.logicovercode.bsbt.BuilderStyleBuild
 import com.logicovercode.fsbt.commons.dependencies.AllDependencies
+import com.logicovercode.fsbt.commons.licenses.LicenseProvider
+import com.logicovercode.fsbt.commons.resolvers.ResolverProvider
 import com.logicovercode.fsbt.commons.services.{ClusterServicesProvider, MySqlServiceProvider, PostgresSqlServiceProvider}
 import sbt.{AutoPlugin, PluginTrigger, Plugins}
 
 object FluentStyleSbt extends AutoPlugin {
 
   object autoImport
-      extends AllDependencies
-      with SbtResolvers
-      with Licenses
+    extends AllDependencies
       with MySqlServiceProvider
       with PostgresSqlServiceProvider
       with ClusterServicesProvider
+      with LicenseProvider
+      with ResolverProvider
       //with ProtoSettings
       with ModuleBuildExtSettings
 

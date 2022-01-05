@@ -18,8 +18,6 @@ val githubRepo = GithubRepo("logicovercode", "FluentStyleSbtPlugin")
 
 val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.524")
   .sourceDirectories(
-    "licenses",
-    "resolvers",
     "plugin",
     "docker-containers",
     //"proto-grpc-support"
