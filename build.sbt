@@ -18,22 +18,16 @@ val githubRepo = GithubRepo("logicovercode", "FluentStyleSbtPlugin")
 
 val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.524")
   .sourceDirectories(
-    //"dependencies/model",
-//    "dependencies/spark",
-//    "dependencies/spark_deprecated",
-//    "dependencies/springboot",
-//    "dependencies/all",
     "licenses",
     "resolvers",
     "plugin",
     "docker-containers",
-    "proto-grpc-support"
+    //"proto-grpc-support"
   )
   //TODO : this dependency is for docker (make this dependency conditional, depending on jdk version)
   .dependencies(
     "javax.activation" % "activation" % "1.1.1",
     "com.logicovercode" %% "fsbt-commons" % "0.0.001",
-    "com.logicovercode" %% "docker-definitions" % "0.0.004"
   )
   .sbtPlugins(
     "com.logicovercode" %% "fluent-style-sbt-core" % "0.0.423",

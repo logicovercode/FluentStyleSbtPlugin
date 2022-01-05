@@ -1,6 +1,5 @@
 package hdfs
 
-import com.logicovercode.base_plugin.docker_containers.SshClusterSettings
 import com.logicovercode.bsbt.docker.model.DockerContext
 import com.logicovercode.bsbt.docker.utils.DockerServiceOperations
 import com.logicovercode.wdocker.{DockerNetwork, DockerSystem}
