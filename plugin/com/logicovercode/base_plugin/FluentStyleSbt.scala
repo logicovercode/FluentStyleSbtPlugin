@@ -17,7 +17,7 @@ object FluentStyleSbt extends AutoPlugin {
       with LicenseProvider
       with ResolverProvider
       //with ProtoSettings
-      with ModuleBuildExtSettings
+      with FSbtTypeAliases
 
   override def trigger: PluginTrigger = Plugins.noTrigger
 

@@ -5,9 +5,6 @@ sbtPlugin := true
 
 val license = new License("MIT", "https://opensource.org/licenses/MIT")
 
-/*this will automatically fetch dependency-tree for sbt projects that depends on LogicAndCode*/
-addDependencyTreePlugin
-
 val techLead = Developer(
   "techLead",
   "techLead",
@@ -30,9 +27,7 @@ val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.524")
   .sbtPlugins(
     "com.logicovercode" %% "fluent-style-sbt-core" % "0.0.423",
     /*this will automatically fetch flyway-sbt, sbt-pack for sbt projects that depends on fluent-style-sbt*/
-    "io.github.davidmweber" % "flyway-sbt" % "6.5.0",
     "org.xerial.sbt" % "sbt-pack" % "0.13",
-    "org.scalameta" % "sbt-scalafmt" % "2.4.6",
     "com.github.cb372" % "sbt-explicit-dependencies" % "0.2.16"
   )
   .sbtPlugins("com.thesamet" % "sbt-protoc" % "1.0.0")
