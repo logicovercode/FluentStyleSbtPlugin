@@ -20,6 +20,6 @@ trait FSbtTypeAliases {
   }
 
   def docker_definitions(): ModuleID = {
-    "com.logicovercode" %% "docker-definitions" % "0.0.004"
+    "com.logicovercode" %% "docker-definitions" % "0.0.005"
   }
 }
