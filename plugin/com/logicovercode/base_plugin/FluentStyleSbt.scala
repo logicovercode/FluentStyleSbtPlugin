@@ -1,7 +1,7 @@
 package com.logicovercode.base_plugin
 
 import com.logicovercode.bsbt.BuilderStyleBuild
-import com.logicovercode.fsbt.commons.dependencies.{AllDependencies, GeneratedModuleIds}
+import com.logicovercode.fsbt.commons.dependencies.{AllDependencies, DependencyVersionHandler, GeneratedModuleIds}
 import com.logicovercode.fsbt.commons.services.{ClusterServicesProvider, MySqlServiceProvider, PostgresSqlServiceProvider}
 import sbt.{AutoPlugin, PluginTrigger, Plugins}
 
@@ -15,6 +15,7 @@ object FluentStyleSbt extends AutoPlugin {
       with ClusterServicesProvider
       //with ProtoSettings
       with FSbtTypeAliases
+      with DependencyVersionHandler
 
   override def trigger: PluginTrigger = Plugins.noTrigger
 

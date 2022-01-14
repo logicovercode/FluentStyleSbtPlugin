@@ -21,6 +21,8 @@ val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.524")
   .dependencies("com.thesamet.scalapb" %% "compilerplugin" % "0.9.0")
   .testDependencies( "org.scalatest" %% "scalatest" % "3.2.7" )
   .testSourceDirectories("dependencies-spec", "docker-containers-spec")
+  .scalaVersions(scala_2_12_MaxVersion)
+  .javaCompatibility("1.8", "1.8")
   .publish(githubRepo.developer, MIT_License, githubRepo)
 
 val basePluginProject = (project in file("."))
