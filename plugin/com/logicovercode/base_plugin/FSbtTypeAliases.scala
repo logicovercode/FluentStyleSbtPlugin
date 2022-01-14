@@ -15,11 +15,4 @@ trait FSbtTypeAliases {
   val SBuild = ScalaBuild
   //type SBuild = ScalaBuildSettings
 
-  def fsbt_commons(): ModuleID = {
-    "com.logicovercode" %% "fsbt-commons" % "0.0.001"
-  }
-
-  def docker_definitions(): ModuleID = {
-    "com.logicovercode" %% "docker-definitions" % "0.0.005"
-  }
 }
