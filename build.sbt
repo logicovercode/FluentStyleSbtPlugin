@@ -23,7 +23,7 @@ val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.524")
   .testSourceDirectories("dependencies-spec", "docker-containers-spec")
   .scalaVersions(scala_2_12_MaxVersion)
   .javaCompatibility("1.8", "1.8")
-  .publish(githubRepo.developer, MIT_License, githubRepo)
+  .publish(githubRepo.developer, MIT_License, githubRepo, Opts.resolver.sonatypeStaging)
 
 val basePluginProject = (project in file("."))
   .settings( moduleBuild.settings )
