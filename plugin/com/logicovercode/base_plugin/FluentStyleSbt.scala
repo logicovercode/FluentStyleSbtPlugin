@@ -1,26 +1,21 @@
 package com.logicovercode.base_plugin
 
-import com.logicovercode.base_plugin.all.AllDependencies
-import com.logicovercode.base_plugin.docker_containers.{MySqlSettings, PostgresSettings, SshClusterSettings}
-import com.logicovercode.base_plugin.licenses.Licenses
-import com.logicovercode.base_plugin.proto.ProtoSettings
-import com.logicovercode.base_plugin.resolvers.SbtResolvers
-import com.logicovercode.base_plugin.spark.SparkDeprecatedSettings
 import com.logicovercode.bsbt.BuilderStyleBuild
+import com.logicovercode.fsbt.commons.dependencies.{AllDependencies, DependencyVersionHandler, GeneratedModuleIds}
+import com.logicovercode.fsbt.commons.services.{ClusterServicesProvider, MySqlServiceProvider, PostgresSqlServiceProvider}
 import sbt.{AutoPlugin, PluginTrigger, Plugins}
 
 object FluentStyleSbt extends AutoPlugin {
 
   object autoImport
-      extends SparkDeprecatedSettings
-      with AllDependencies
-      with SbtResolvers
-      with Licenses
-      with MySqlSettings
-      with PostgresSettings
-      with SshClusterSettings
-      with ProtoSettings
-      with ModuleBuildExtSettings
+    extends AllDependencies
+      with GeneratedModuleIds
+      with MySqlServiceProvider
+      with PostgresSqlServiceProvider
+      with ClusterServicesProvider
+      //with ProtoSettings
+      with FSbtTypeAliases
+      with DependencyVersionHandler
 
   override def trigger: PluginTrigger = Plugins.noTrigger
 

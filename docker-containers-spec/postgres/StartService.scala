@@ -1,6 +1,5 @@
 package postgres
 
-import com.logicovercode.base_plugin.docker_containers.PostgresSettings
 import com.logicovercode.bsbt.docker.model.{DockerContext, MicroService}
 import com.logicovercode.bsbt.docker.utils.DockerServiceOperations
 

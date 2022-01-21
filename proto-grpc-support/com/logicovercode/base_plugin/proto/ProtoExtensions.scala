@@ -1,10 +1,10 @@
 package com.logicovercode.base_plugin.proto
 
-import com.logicovercode.base_plugin.Version
 import com.logicovercode.bsbt.build.Build
 import com.logicovercode.bsbt.java_module.JavaBuild
 import com.logicovercode.bsbt.scala_module.ScalaBuild
-import sbt.{Def, _}
+import com.logicovercode.fsbt.commons.Version
+import sbt._
 import sbtprotoc.ProtocPlugin.autoImport.AsProtocPlugin
 
 trait ProtoSettings {
