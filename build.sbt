@@ -4,7 +4,7 @@ sbtPlugin := true
 
 val githubRepo = githubHosting("logicovercode", "FluentStyleSbtPlugin", "techLeadAtLogicOverCode", "techlead@logicovercode.com")
 
-val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.524")
+val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.525")
   .sourceDirectories("plugin", "docker-containers" /*,"proto-grpc-support"*/)
   //TODO : this dependency is for docker (make this dependency conditional, depending on jdk version)
   .dependencies(

@@ -13,9 +13,9 @@ object FluentStyleSbt extends AutoPlugin {
       with MySqlServiceProvider
       with PostgresSqlServiceProvider
       with ClusterServicesProvider
-      //with ProtoSettings
       with FSbtTypeAliases
       with DependencyVersionHandler
+      with ClusterServicesHandler
 
   override def trigger: PluginTrigger = Plugins.noTrigger
 
