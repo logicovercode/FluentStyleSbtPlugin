@@ -16,6 +16,7 @@ trait FSbtTypeAliases {
   val SBuild = ScalaBuild
 
   val DockerContainer = ContainerDefinition
+  val MicroService = com.logicovercode.fsbt.commons.MicroService
   //type SBuild = ScalaBuildSettings
 
 }

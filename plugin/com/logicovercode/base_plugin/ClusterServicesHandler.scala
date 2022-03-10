@@ -1,23 +1,23 @@
 package com.logicovercode.base_plugin
 
-import com.logicovercode.docker.cluster.{Cluster, HdfsCluster, HiveCluster, KafkaCluster, RootSshCluster, SparkCluster, SshCluster}
-import com.logicovercode.fsbt.commons.SbtMicroservice
-import com.logicovercode.fsbt.commons.services.ClusterServicesProvider
+import com.logicovercode.docker.cluster._
+import com.logicovercode.fsbt.commons.SbtService
+import com.logicovercode.fsbt.commons.services.MicroServicesProvider
 
-trait ClusterServicesHandler extends ClusterServicesProvider{
+trait MicroServicesHandler extends MicroServicesProvider{
   implicit class ClusterExtension(cluster: Cluster) {
 
-    def configurableAttributes(imagePullTimeoutInMinutes: Int, containerStartTimeoutInMinutes: Int): SbtMicroservice = {
+    def configurableAttributes(imagePullTimeoutInMinutes: Int, containerStartTimeoutInMinutes: Int): SbtService = {
       cluster.clusterType match {
-        case SshCluster => CreateSshClusterService.sshClusterService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
+        case SshCluster => CreateSshMicroService.sshMicroService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
         case RootSshCluster =>
-          CreateRootSshClusterService.rootSshClusterService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
-        case HdfsCluster => CreateHdfsClusterService.hdfsClusterService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
-        case HiveCluster => CreateHiveClusterService.hiveClusterService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
+          CreateRootSshMicroService.rootSshMicroService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
+        case HdfsCluster => CreateHdfsMicroService.hdfsMicroService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
+        case HiveCluster => CreateHiveMicroService.hiveMicroService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
         case SparkCluster =>
-          CreateSparkClusterService.sparkClusterService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
+          CreateSparkMicroService.sparkMicroService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
         case KafkaCluster =>
-          CreateKafkaClusterService.kafkaClusterService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
+          CreateKafkaMicroService.kafkaMicroService(cluster, imagePullTimeoutInMinutes, containerStartTimeoutInMinutes)
       }
     }
   }
