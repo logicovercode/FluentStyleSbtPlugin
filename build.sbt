@@ -12,7 +12,7 @@ val moduleBuild = ScalaBuild("com.logicovercode", "fluent-style-sbt", "0.0.527")
     "com.logicovercode" %% "fsbt-commons" % "0.0.004",
   )
   .sbtPlugins(
-    "com.logicovercode" %% "fluent-style-sbt-core" % "0.0.426",
+    "com.logicovercode" %% "fluent-style-sbt-core" % "0.0.427",
     /*this will automatically fetch flyway-sbt, sbt-pack for sbt projects that depends on fluent-style-sbt*/
     "org.xerial.sbt" % "sbt-pack" % "0.13",
     "com.github.cb372" % "sbt-explicit-dependencies" % "0.2.16"
